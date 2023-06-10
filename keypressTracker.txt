@@ -1,0 +1,49 @@
+--[[
+This script keeps track of whether or not
+specific, pre-defined keys have been double tapped
+]]--
+
+-- get the user input service
+local input = game:GetService("UserInputService")
+
+--this is a list of keycodes to be tracked
+local keys = {}
+keys[Enum.KeyCode.W] = false -- W key
+keys[Enum.KeyCode.A] = false
+keys[Enum.KeyCode.S] = false
+keys[Enum.KeyCode.D] = false
+
+debounce = 1000 --milliseconds
+
+local function containsKey(map, key)
+	return map[key] ~= nil
+end
+
+print(containsKey(keys, Enum.KeyCode.W))
+print(containsKey(keys, 'foo'))
+
+local function trackKey(input, _gameProcessedEvent)
+	local key = input.KeyCode
+	-- if key is in the list of keys, and it is false
+	if(keys.containsKey(key) and not keys[key]) then
+
+		--set it to true
+		keys[key] = true
+		-- set key back to false after a delay (debounce)
+		delay(debounce, function() keys[key] = false end)
+	end
+end
+--
+
+--prints the true/false status of the key
+function logInput(input, _gameProcessedEvent)
+	print(keys[input.KeyCode])
+end
+
+--connect the functions to the input event
+
+input.InputBegan:Connect(trackKey)
+input.InputBegan:Connect(logInput)
+
+
+

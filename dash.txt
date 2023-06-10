@@ -1,0 +1,35 @@
+--[[
+A dash script, for use by humanoid player characters
+--]]
+
+-- set up local player variables
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local input = game:GetService("UserInputService")
+
+-- TODO set up animation
+--[[
+local animation = Instance.new("Animation")
+animation.AnimationId = "rbxassetid://Your Animation Id"
+local loadedAnimation = Humanoid:LoadAnimation(animation)
+--]]
+
+local debounce = false
+local dashKey = Enum.KeyCode.Q
+
+function dash(input, _gameProcessedEvent)
+	if(input.KeyCode == dashKey) then
+		print(dashKey.Name .. " key pressed")
+		-- apply impulse force to player center of mass
+		local part = humanoid.RootPart
+		
+		local magnitude = 5000
+		local direction = part.CFrame.LookVector
+		local force = magnitude * direction
+		
+		part:ApplyImpulse(force)
+	end
+end
+
+input.InputBegan:Connect(dash)
